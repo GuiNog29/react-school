@@ -1,3 +1,19 @@
 import styled from 'styled-components';
 
-export const Paragraph = styled.p``;
+export const StudentContainer = styled.div`
+  margin-top: 20px;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+  }
+`;
+export const ProfilePicture = styled.div`
+  img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+  }
+`;
