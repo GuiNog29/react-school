@@ -36,12 +36,11 @@ export default function Register() {
     if (formErrors) return;
 
     try {
-      const resp = await axios.post('/users/', {
+      await axios.post('/users/', {
         name,
         password,
         email,
       });
-      console.log(resp.data);
       toast.success('You made your registration');
       history.push('/login');
     } catch (error) {
