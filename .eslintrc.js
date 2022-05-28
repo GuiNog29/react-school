@@ -29,6 +29,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'import/no-extraneous-dependencies': 0,
     'default-param-last': 0,
-    endOfLine: 'auto',
+    endOfLine: 0,
+    'react/jsx-no-bind': 0,
   },
 };
