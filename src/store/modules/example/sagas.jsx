@@ -10,7 +10,7 @@ const request = () =>
     }, 600);
   });
 
-function* exempleRequest() {
+function* exampleRequest() {
   try {
     yield call(request);
     yield put(actions.clickButtonSuccess());
@@ -20,4 +20,4 @@ function* exempleRequest() {
   }
 }
 
-export default all([takeLatest(types.BUTTON_CLICKED_REQUEST, exempleRequest)]);
+export default all([takeLatest(types.BUTTON_CLICKED_REQUEST, exampleRequest)]);
