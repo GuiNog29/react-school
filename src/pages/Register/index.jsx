@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
-import { get } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
 
-import axios from '../../services/axios';
-import history from '../../services/history';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import Loading from '../../components/Loading';
+import * as actions from '../../store/modules/auth/actions';
 
 export default function Register() {
+  const dispath = useDispatch();
+  const id = useSelector((state) => state.auth.user.id);
+  const nameStored = useSelector((state) => state.auth.user.name);
+  const emailStored = useSelector((state) => state.auth.user.email);
+  const isLoading = useSelector((state) => state.auth.isLoading);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (!id) return;
+    setName(nameStored);
+    setEmail(emailStored);
+  }, [emailStored, id, nameStored]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,38 +40,20 @@ export default function Register() {
       toast.error('Invalid E-mail.');
     }
 
-    if (password.length < 6 || password.length > 50) {
+    if (!id && (password.length < 6 || password.length > 50)) {
       formErrors = true;
       toast.error('Password must have between 6 and 50 characters.');
     }
 
     if (formErrors) return;
 
-    setIsLoading(true);
-
-    try {
-      await axios.post('/users/', {
-        name,
-        password,
-        email,
-      });
-      toast.success('You made your registration');
-
-      setIsLoading(false);
-
-      history.push('/login');
-    } catch (error) {
-      const errors = get(error, 'response.data.errors', []);
-
-      errors.map((err) => toast.error(err));
-      setIsLoading(false);
-    }
+    dispath(actions.registerRequest({ name, email, password, id }));
   }
 
   return (
     <Container>
       <Loading isLoading={isLoading} />
-      <h1>Create you account</h1>
+      <h1>{id ? 'Edit Data' : 'Create you account'}</h1>
 
       <Form onSubmit={handleSubmit}>
         <label htmlFor="name">
@@ -94,7 +86,7 @@ export default function Register() {
           />
         </label>
 
-        <button type="submit">Create my account</button>
+        <button type="submit">{id ? 'Save' : 'Create my account'}</button>
       </Form>
     </Container>
   );
