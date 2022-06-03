@@ -31,5 +31,7 @@ module.exports = {
     'default-param-last': 0,
     endOfLine: 0,
     'react/jsx-no-bind': 0,
+    'react/jsx-no-useless-fragment': 0,
+    'react/jsx-curly-brace-presence': 0,
   },
 };
