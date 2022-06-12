@@ -3,14 +3,17 @@ import { get } from 'lodash';
 import { isEmail, isInt, isFloat } from 'validator';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 import axios from '../../services/axios';
 import history from '../../services/history';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import Loading from '../../components/Loading';
+import * as actions from '../../store/modules/auth/actions';
 
 export default function Student({ match }) {
+  const dispatch = useDispatch();
   const id = get(match, 'params.id', '');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -90,7 +93,6 @@ export default function Student({ match }) {
       setIsLoading(true);
 
       if (id) {
-        console.log('aqui');
         await axios.put(`/students/${id}`, {
           name,
           surname,
@@ -102,7 +104,7 @@ export default function Student({ match }) {
 
         toast.success('Student successfully edited');
       } else {
-        await axios.post(`/students/`, {
+        const { data } = await axios.post(`/students/`, {
           name,
           surname,
           email,
@@ -112,11 +114,24 @@ export default function Student({ match }) {
         });
 
         toast.success('Student successfully created');
+        history.push(`/student/${data.id}/edit`);
       }
 
       setIsLoading(false);
     } catch (err) {
-      setIsLoading(false);
+      const status = get(err, 'response.status', 0);
+      const data = get(err, 'response.data', {});
+      const errors = get(data, 'errors', []);
+
+      if (errors.length > 0) {
+        errors.map((error) => toast.error(error));
+      } else {
+        toast.error('Unknow error');
+      }
+
+      if (status === 401) {
+        dispatch(actions.loginFailure());
+      }
     }
   }
 
@@ -133,30 +148,35 @@ export default function Student({ match }) {
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
         />
+
         <input
           type="text"
           value={surname}
           onChange={(e) => setSurname(e.target.value)}
           placeholder="Surname"
         />
+
         <input
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail"
         />
+
         <input
           type="number"
           value={age}
           onChange={(e) => setAge(e.target.value)}
           placeholder="Age"
         />
+
         <input
           type="text"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
           placeholder="Weight"
         />
+
         <input
           type="text"
           value={height}
