@@ -4,11 +4,13 @@ import { isEmail, isInt, isFloat } from 'validator';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { FaUserCircle, FaEdit } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import axios from '../../services/axios';
 import history from '../../services/history';
 import { Container } from '../../styles/GlobalStyles';
-import { Form } from './styled';
+import { Form, ProfilePicture, Title } from './styled';
 import Loading from '../../components/Loading';
 import * as actions from '../../store/modules/auth/actions';
 
@@ -21,6 +23,7 @@ export default function Student({ match }) {
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
+  const [picture, setPicture] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -31,8 +34,9 @@ export default function Student({ match }) {
         setIsLoading(true);
 
         const { data } = await axios.get(`/students/${id}`);
-        // const Picture = get(data, 'Picture[0].url', '');
+        const Picture = get(data, 'Pictures[0].url', '');
 
+        setPicture(Picture);
         setName(data.name);
         setSurname(data.surname);
         setEmail(data.email);
@@ -139,7 +143,21 @@ export default function Student({ match }) {
     <Container>
       <Loading isLoading={isLoading} />
 
-      <h1>{id ? 'Edit Student' : 'New Student'}</h1>
+      <Title>{id ? 'Edit Student' : 'New Student'}</Title>
+
+      {id && (
+        <ProfilePicture>
+          {picture ? (
+            <img src={picture} alt={name} />
+          ) : (
+            <FaUserCircle size={180} />
+          )}
+
+          <Link to={`/pictures/${id}`}>
+            <FaEdit size={24} />
+          </Link>
+        </ProfilePicture>
+      )}
 
       <Form onSubmit={handleSubmit}>
         <input

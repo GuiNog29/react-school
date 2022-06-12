@@ -33,5 +33,6 @@ module.exports = {
     'react/jsx-no-bind': 0,
     'react/jsx-no-useless-fragment': 0,
     'react/jsx-curly-brace-presence': 0,
+    'jsx-a11y/anchor-is-valid': 0,
   },
 };
