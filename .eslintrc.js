@@ -34,5 +34,6 @@ module.exports = {
     'react/jsx-no-useless-fragment': 0,
     'react/jsx-curly-brace-presence': 0,
     'jsx-a11y/anchor-is-valid': 0,
+    'jsx-a11y/img-redundant-alt': 0,
   },
 };
